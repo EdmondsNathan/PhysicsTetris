@@ -5,6 +5,6 @@ public class GetBlockLocation : MonoBehaviour
 {
 	public Vector2Int GetLocation()
 	{
-		return new Vector2Int((int)math.floor(transform.position.x), (int)math.floor(transform.position.y));
+		return new Vector2Int((int)math.round(transform.position.x), (int)math.round(transform.position.y));
 	}
 }
