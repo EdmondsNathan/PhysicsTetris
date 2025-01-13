@@ -13,12 +13,12 @@ public class GetGridState : MonoBehaviour
 
 	protected void OnEnable()
 	{
-		Message_NewBlockSpawned.NewBlockSpawned += EvaluateGridState;
+		Message_SpawnBlock.NewBlockSpawned += EvaluateGridState;
 	}
 
 	protected void OnDisable()
 	{
-		Message_NewBlockSpawned.NewBlockSpawned -= EvaluateGridState;
+		Message_SpawnBlock.NewBlockSpawned -= EvaluateGridState;
 	}
 
 	public void EvaluateGridState(GameObject block)
@@ -77,7 +77,6 @@ public class GetGridState : MonoBehaviour
 					Destroy(_gridDictionary[currentLocation]);
 
 					Transform owner = _gridDictionary[currentLocation].transform.parent;
-					Debug.Log(owner.name);
 
 					if (owner != transform)
 					{
@@ -86,6 +85,7 @@ public class GetGridState : MonoBehaviour
 							owner.GetChild(i).AddComponent<Rigidbody2D>();
 							owner.GetChild(i).parent = owner.parent;
 						}
+						Destroy(owner.gameObject);
 					}
 
 					_gridDictionary.Remove(currentLocation);

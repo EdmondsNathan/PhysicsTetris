@@ -2,47 +2,52 @@ using UnityEngine;
 
 public class SpawnBlock : MonoBehaviour
 {
-	public static SpawnBlock BlockSpawner;
 	[SerializeReference] private BlockSelector _nextBlockSelector;
 
-	private GameObject _currentBlock;
+	private GameObject _currentBlock, _nextBlock;
+
 	public void SpawnNewBlock()
 	{
-		SpawnNewBlock(_nextBlockSelector.SelectNextBlock());
+		if (_nextBlock == null)
+		{
+			SetNextBlock();
+		}
+
+		SpawnNewBlock(_nextBlock);
+
+		SetNextBlock();
 	}
 
 	public void SpawnNewBlock(GameObject block)
 	{
 		_currentBlock = Instantiate(block, transform.position, block.transform.rotation, transform);
 
-		Message_NewBlockSpawned.NewBlockSpawned?.Invoke(_currentBlock);
+		Message_SpawnBlock.NewBlockSpawned?.Invoke(_currentBlock);
 	}
 
-	protected void Awake()
+	private void SetNextBlock()
 	{
-		if (BlockSpawner == null)
-		{
-			BlockSpawner = this;
-		}
+		_nextBlock = _nextBlockSelector.SelectNextBlock();
+		Message_SpawnBlock.NextBlock?.Invoke(_nextBlock);
 	}
 
 	protected void OnEnable()
 	{
-		Message_SpawnNextBlock.SpawnNextBlock += SpawnNewBlock;
-		Message_SpawnNextBlock.SpawnSpecificBlock += SpawnNewBlock;
+		Message_SpawnBlock.SpawnNextBlock += SpawnNewBlock;
+		Message_SpawnBlock.SpawnSpecificBlock += SpawnNewBlock;
 	}
 
 	protected void OnDisable()
 	{
-		Message_SpawnNextBlock.SpawnNextBlock -= SpawnNewBlock;
-		Message_SpawnNextBlock.SpawnSpecificBlock -= SpawnNewBlock;
+		Message_SpawnBlock.SpawnNextBlock -= SpawnNewBlock;
+		Message_SpawnBlock.SpawnSpecificBlock -= SpawnNewBlock;
 	}
 
 	protected void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			Message_SpawnNextBlock.SpawnNextBlock?.Invoke();
+			Message_SpawnBlock.SpawnNextBlock?.Invoke();
 		}
 	}
 }

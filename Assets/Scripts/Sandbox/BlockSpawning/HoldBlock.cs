@@ -12,12 +12,12 @@ public class HoldBlock : MonoBehaviour
 
 	protected void OnEnable()
 	{
-		Message_NewBlockSpawned.NewBlockSpawned += SetCurrentBlock;
+		Message_SpawnBlock.NewBlockSpawned += SetCurrentBlock;
 	}
 
 	protected void OnDisable()
 	{
-		Message_NewBlockSpawned.NewBlockSpawned -= SetCurrentBlock;
+		Message_SpawnBlock.NewBlockSpawned -= SetCurrentBlock;
 	}
 
 	public void SetCurrentBlock(GameObject block)
@@ -36,11 +36,7 @@ public class HoldBlock : MonoBehaviour
 
 		GameObject oldBlock = _currentBlock;
 
-		// _currentBlock.transform.position = new Vector2(100, 100);
-
-
-		//_currentBlock.GetComponent<Rigidbody2D>().position = _holdLocation.position;
-
+		#region Move block to holding
 		_currentBlock.transform.position = _holdLocation.position;
 
 		_currentBlock.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
@@ -48,30 +44,27 @@ public class HoldBlock : MonoBehaviour
 		_currentBlock.GetComponent<Rigidbody2D>().angularVelocity = 0;
 
 		_currentBlock.transform.parent = null;
+		#endregion
 
+		#region Hold block and spawn next block
 		if (_heldBlock == null)
 		{
 			_heldBlock = _currentBlock;
 
-			Message_SpawnNextBlock.SpawnNextBlock?.Invoke();
+			Message_SpawnBlock.SpawnNextBlock?.Invoke();
 		}
 		else
 		{
-			//_heldBlock.SetActive(true);
-
 			GameObject oldHeldBlock = _heldBlock;
 
-			Message_SpawnNextBlock.SpawnSpecificBlock?.Invoke(_heldBlock);
+			Message_SpawnBlock.SpawnSpecificBlock?.Invoke(_heldBlock);
 
 			_heldBlock = oldBlock;
 
 			Destroy(oldHeldBlock);
 		}
 
-
-
-		//_heldBlock.SetActive(false);
-
 		_lockedOut = true;
+		#endregion
 	}
 }
