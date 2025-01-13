@@ -28,8 +28,6 @@ public class SpawnBlockOnTimer : MonoBehaviour
 		if (_currentTimer <= 0)
 		{
 			Message_SpawnBlock.SpawnNextBlock?.Invoke();
-
-			_currentTimer = 0;
 		}
 
 		Message_SpawnBlock.NextBlockTimer?.Invoke(_currentTimer);

@@ -13,15 +13,15 @@ public class GetGridState : MonoBehaviour
 
 	protected void OnEnable()
 	{
-		Message_SpawnBlock.NewBlockSpawned += EvaluateGridState;
+		Message_SpawnBlock.BeforeBlockSpawn += EvaluateGridState;
 	}
 
 	protected void OnDisable()
 	{
-		Message_SpawnBlock.NewBlockSpawned -= EvaluateGridState;
+		Message_SpawnBlock.BeforeBlockSpawn -= EvaluateGridState;
 	}
 
-	public void EvaluateGridState(GameObject block)
+	public void EvaluateGridState()
 	{
 		_gridDictionary = new Dictionary<Vector2Int, GameObject>();
 
@@ -30,6 +30,12 @@ public class GetGridState : MonoBehaviour
 		foreach (GetBlockLocation blockLocation in _blockSpawner.GetComponentsInChildren<GetBlockLocation>())
 		{
 			currentBlockLocation = blockLocation.GetLocation();
+
+			if (currentBlockLocation.y > _boardHeight)
+			{
+				//MESSAGE GAME OVER
+				Debug.Log("Game Over");
+			}
 
 			if (_gridDictionary.ContainsKey(currentBlockLocation) == false)
 			{

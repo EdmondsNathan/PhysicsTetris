@@ -5,6 +5,8 @@ public static class Message_SpawnBlock
 {
 	public static Action SpawnNextBlock;
 
+	public static Action BeforeBlockSpawn;
+
 	// public static Action<bool> SpawnIsReady;
 
 	public static Action<float> NextBlockTimer;
