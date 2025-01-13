@@ -6,8 +6,29 @@ public class SpawnBlock : MonoBehaviour
 
 	private GameObject _currentBlock, _nextBlock;
 
-	public void SpawnNewBlock()
+	// private bool _isSpawnReady = true;
+
+	protected void OnEnable()
 	{
+		Message_SpawnBlock.SpawnNextBlock += SpawnNewBlock;
+		Message_SpawnBlock.SpawnSpecificBlock += SpawnNewBlock;
+		// Message_SpawnBlock.SpawnIsReady += ReadySpawn;
+	}
+
+	protected void OnDisable()
+	{
+		Message_SpawnBlock.SpawnNextBlock -= SpawnNewBlock;
+		Message_SpawnBlock.SpawnSpecificBlock -= SpawnNewBlock;
+		// Message_SpawnBlock.SpawnIsReady -= ReadySpawn;
+	}
+
+	private void SpawnNewBlock()
+	{
+		// if (_isSpawnReady == false)
+		// {
+		// 	return;
+		// }
+
 		if (_nextBlock == null)
 		{
 			SetNextBlock();
@@ -18,8 +39,13 @@ public class SpawnBlock : MonoBehaviour
 		SetNextBlock();
 	}
 
-	public void SpawnNewBlock(GameObject block)
+	private void SpawnNewBlock(GameObject block)
 	{
+		// if (_isSpawnReady == false)
+		// {
+		// 	return;
+		// }
+
 		_currentBlock = Instantiate(block, transform.position, block.transform.rotation, transform);
 
 		Message_SpawnBlock.NewBlockSpawned?.Invoke(_currentBlock);
@@ -31,23 +57,8 @@ public class SpawnBlock : MonoBehaviour
 		Message_SpawnBlock.NextBlock?.Invoke(_nextBlock);
 	}
 
-	protected void OnEnable()
-	{
-		Message_SpawnBlock.SpawnNextBlock += SpawnNewBlock;
-		Message_SpawnBlock.SpawnSpecificBlock += SpawnNewBlock;
-	}
-
-	protected void OnDisable()
-	{
-		Message_SpawnBlock.SpawnNextBlock -= SpawnNewBlock;
-		Message_SpawnBlock.SpawnSpecificBlock -= SpawnNewBlock;
-	}
-
-	protected void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			Message_SpawnBlock.SpawnNextBlock?.Invoke();
-		}
-	}
+	// private void ReadySpawn(bool isReady)
+	// {
+	// 	_isSpawnReady = isReady;
+	// }
 }
