@@ -9,28 +9,17 @@ public class GetGridState : MonoBehaviour
 
 	[SerializeField] private int _boardWidth, _boardHeight;
 
-	//private List<List<GameObject>> _gridBlocks;
-
 	private Dictionary<Vector2Int, GameObject> _gridDictionary;
 
 	protected void OnEnable()
 	{
-		Message_SpawnBlock.NewBlockSpawned += EvaluateGridState;
+		Message_NewBlockSpawned.NewBlockSpawned += EvaluateGridState;
 	}
 
 	protected void OnDisable()
 	{
-		Message_SpawnBlock.NewBlockSpawned -= EvaluateGridState;
+		Message_NewBlockSpawned.NewBlockSpawned -= EvaluateGridState;
 	}
-
-	// protected void Start()
-	// {
-	// 	_gridBlocks = new List<List<GameObject>>(_boardWidth);
-	// 	for (int x = 0; x < _boardWidth; x++)
-	// 	{
-	// 		_gridBlocks.Add(new List<GameObject>(_boardHeight));
-	// 	}
-	// }
 
 	public void EvaluateGridState(GameObject block)
 	{
@@ -41,20 +30,6 @@ public class GetGridState : MonoBehaviour
 		foreach (GetBlockLocation blockLocation in _blockSpawner.GetComponentsInChildren<GetBlockLocation>())
 		{
 			currentBlockLocation = blockLocation.GetLocation();
-
-			// if (_gridBlocks[currentBlockLocation.x][currentBlockLocation.y] == null ||
-			// Vector2.Distance(currentBlockLocation, blockLocation.transform.position) <
-			// Vector2.Distance(currentBlockLocation, _gridBlocks[currentBlockLocation.x][currentBlockLocation.y].transform.position))
-			// {
-			// 	_gridBlocks[currentBlockLocation.x][currentBlockLocation.y] = blockLocation.gameObject;
-			// }
-
-			// if (_gridDictionary[currentBlockLocation] == null ||
-			// Vector2.Distance(currentBlockLocation, blockLocation.transform.position) <
-			// Vector2.Distance(currentBlockLocation, _gridDictionary[currentBlockLocation].transform.position))
-			// {
-			// 	_gridDictionary[currentBlockLocation] = blockLocation.gameObject;
-			// }
 
 			if (_gridDictionary.ContainsKey(currentBlockLocation) == false)
 			{
@@ -72,6 +47,8 @@ public class GetGridState : MonoBehaviour
 
 	private void RemoveCompletedRows()
 	{
+		int linesCleared = 0;
+
 		Vector2Int currentLocation = new Vector2Int();
 
 		for (int y = 0; y < _boardHeight; y++)
@@ -92,6 +69,8 @@ public class GetGridState : MonoBehaviour
 
 			if (fullRow)
 			{
+				linesCleared++;
+
 				for (int x = 0; x < _boardWidth; x++)
 				{
 					currentLocation.x = x;
@@ -112,6 +91,11 @@ public class GetGridState : MonoBehaviour
 					_gridDictionary.Remove(currentLocation);
 				}
 			}
+		}
+
+		if (linesCleared > 0)
+		{
+			Message_LinesCleared.LinesCleared?.Invoke(linesCleared);
 		}
 	}
 }

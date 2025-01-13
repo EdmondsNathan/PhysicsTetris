@@ -4,12 +4,12 @@ public class LogCurrentBlock : MonoBehaviour
 {
 	protected void OnEnable()
 	{
-		Message_SpawnBlock.NewBlockSpawned += LogNewBlock;
+		Message_NewBlockSpawned.NewBlockSpawned += LogNewBlock;
 	}
 
 	protected void OnDisable()
 	{
-		Message_SpawnBlock.NewBlockSpawned -= LogNewBlock;
+		Message_NewBlockSpawned.NewBlockSpawned -= LogNewBlock;
 	}
 
 	public void LogNewBlock(GameObject block)

@@ -17,12 +17,12 @@ public class MoveCurrentBlock : MonoBehaviour
 
 	protected void OnEnable()
 	{
-		Message_SpawnBlock.NewBlockSpawned += UpdateCurrentBlock;
+		Message_NewBlockSpawned.NewBlockSpawned += UpdateCurrentBlock;
 	}
 
 	protected void OnDisable()
 	{
-		Message_SpawnBlock.NewBlockSpawned -= UpdateCurrentBlock;
+		Message_NewBlockSpawned.NewBlockSpawned -= UpdateCurrentBlock;
 	}
 
 	protected void Start()
