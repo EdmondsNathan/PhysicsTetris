@@ -13,15 +13,15 @@ public class GetGridState : MonoBehaviour
 
 	protected void OnEnable()
 	{
-		Message_SpawnBlock.BeforeBlockSpawn += EvaluateGridState;
+		Message_SpawnBlock.BeforeBlockSpawn += RefreshGridDictionary;
 	}
 
 	protected void OnDisable()
 	{
-		Message_SpawnBlock.BeforeBlockSpawn -= EvaluateGridState;
+		Message_SpawnBlock.BeforeBlockSpawn -= RefreshGridDictionary;
 	}
 
-	public void EvaluateGridState()
+	public void RefreshGridDictionary()
 	{
 		_gridDictionary = new Dictionary<Vector2Int, GameObject>();
 
